@@ -146,7 +146,7 @@ class MiniMediaPlayer extends LitElement {
   }
 
   render({ config } = this) {
-    this.computeArtwork();
+    const artwork = this.computeArtwork();
 
     return html`
       <ha-card
@@ -156,12 +156,12 @@ class MiniMediaPlayer extends LitElement {
         artwork=${config.artwork}
         content=${this.player.content}>
         <div class='mmp__bg'>
-          ${this.renderArtwork()}
+          ${this.renderArtwork(artwork)}
           ${this.renderGradient()}
         </div>
         <div class='mmp-player'>
           <div class='mmp-player__core flex' ?inactive=${this.player.idle}>
-            ${this.renderIcon()}
+            ${this.renderIcon(artwork)}
             <div class='entity__info'>
               ${this.renderEntityName()}
               ${this.renderMediaInfo()}
@@ -232,12 +232,12 @@ class MiniMediaPlayer extends LitElement {
     });
   }
 
-  renderArtwork() {
+  renderArtwork(artwork) {
     if (!this.thumbnail && !this.config.background)
       return;
 
     const url = this.config.background
-      && (!this.thumbnail || this.config.artwork === 'default')
+      && (!artwork || this.config.artwork === 'default')
       ? `url(${this.config.background})`
       : this.thumbnail;
 
@@ -277,9 +277,9 @@ class MiniMediaPlayer extends LitElement {
     handleClick(this, this._hass, this.config, this.config.tap_action, this.player.id);
   }
 
-  renderIcon() {
+  renderIcon(artwork) {
     if (this.config.hide.icon) return;
-    if (this.player.active && this.thumbnail && this.config.artwork === 'default')
+    if (this.player.active && artwork && this.config.artwork === 'default')
       return html`
         <div class='entity__artwork'
           style='background-image: ${this.thumbnail};'
